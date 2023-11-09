@@ -2,8 +2,8 @@
 
 **EGMS toolkit** is a set of python scripts to download and manage the InSAR data from [European Ground Motion Service](https://egms.land.copernicus.eu). The toolkit allows:
 1. to download the data automatically; 
-2. merge the files; 
-3. clip/crop the results. 
+2. to merge the files; 
+3. to clip/crop the results. 
 
 **UNDER DEVELOPMENT**
 
@@ -51,6 +51,7 @@ EGMStoolkit.py -l L2a,L2b -r 2018_2022 -t XXXXXXXXXXXXXXXXXXXX -b -6.42705963929
 ````
 
 > **Tips:** The -h option is useful to get a help, i.e., EGMStoolkit.py -h 
+
 > **Tips:** The --example option is useful to get an example for Python scripts, i.e., EGMStoolkit.py --example 
 
 ````bash
