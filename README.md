@@ -5,6 +5,8 @@
 2. merge the files; 
 3. clip/crop the results. 
 
+**UNDER DEVELOPMENT**
+
 **Release info**: Version 1.0.0 Beta, November, 2023
 
 ## 1. Dependencies & Installation 
