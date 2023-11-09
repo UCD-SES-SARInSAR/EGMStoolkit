@@ -18,7 +18,7 @@ The requirements are:
 The required Python packages can be installed by using pip3 or conda: e.g.,
 
 ````bash
-pip3 install optparse sys warnings numpy math glob pandas subprocess fiona shapely pyproj shutil datetime  wget zipfile urllib3 os osgeo osgeo alive_progress pickle plotly
+pip3 install optparse sys warnings numpy math glob pandas subprocess fiona shapely pyproj shutil datetime  wget zipfile urllib3 os osgeo osgeo alive_progress pickle plotly time
 ````
 
 Finally, some system variables must be added. For Linux and MacOS, please add the following lines in your .bashrc file:  

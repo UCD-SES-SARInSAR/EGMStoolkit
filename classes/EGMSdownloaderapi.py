@@ -11,8 +11,11 @@ import numpy as np
 import glob
 import warnings
 import shutil
+import time
 
 from functions import egmsapitools
+
+timeerror462 = 5
 
 ################################################################################
 ## Creation of a class to manage the Sentinel-1 burst ID map
@@ -185,6 +188,7 @@ class egmsdownloader:
                             if self.verbose:
                                 print(f"\tFile downloaded: {filename}")
                         except Exception as e:
+                            time.sleep(timeerror462)
                             if self.verbose:
                                 print(f"An error occurred: {e}")
                     else: 
