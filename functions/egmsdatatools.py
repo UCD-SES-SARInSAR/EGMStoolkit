@@ -427,6 +427,9 @@ def dataclipping(**kwargs):
 ################################################################################
 def filemergingtiff(inputdir,outputdir,name,listfile,verbose):
 
+    if os.path.isfile("%s/%s.tiff" % (outputdir,name)):
+        os.remove("%s/%s.tiff" % (outputdir,name))
+
     cmdi= ["gdal_merge.py", "-o", "%s/%s.tiff" % (outputdir,name), "-n -9999 -a_nodata -9999"]
     for fi in listfile:
         pathfi = glob.glob('%s/*/*/*/%s.tiff' % (inputdir,fi))[0]
@@ -530,6 +533,7 @@ def listtodictmerged(list):
     for fi in list:
         namei = fi.split('/')[-1].split('.')[0]
         ri = egmsapitools.check_release_fromfile(namei)
+
         if ri[1] == '':
             ri[1] = '_2015_2021'
 
@@ -549,7 +553,7 @@ def listtodictmerged(list):
             filedict[ri[0]] = {}
         if not parai[1] in filedict[ri[0]]:
                 filedict[ri[0]][parai[1]] = {}
-        
+                   
         if not parai[1] == 'L3':
             if not parai[2] in filedict[ri[0]][parai[1]]:
                 filedict[ri[0]][parai[1]][parai[2]] = {'Name': 'EGMS_%s_%s_VV%s' % (parai[1],parai[2],ri[1]),
@@ -560,7 +564,7 @@ def listtodictmerged(list):
             if not L3comp in filedict[ri[0]][parai[1]]:
                 filedict[ri[0]][parai[1]][L3comp] = {'Name': 'EGMS_%s%s_%s' % (parai[1],ri[1],L3comp),
                                                        'Files': []}
-                filedict[ri[0]][parai[1]][L3comp]['Files'].append(namei)  
+            filedict[ri[0]][parai[1]][L3comp]['Files'].append(namei)  
             L3compall.append(L3comp)
 
     release = np.unique(release)
