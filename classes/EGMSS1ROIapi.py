@@ -155,7 +155,7 @@ class S1ROIparameter:
         else:
             Pass_user = kwargs['Pass']
             for pii in Pass_user:
-                if not (pii.upper() == 'ASCENDING' or pii.upper() == 'DESCENDING'): 
+                if not (pii.upper() == 'ASCENDING' or pii.upper() == 'DESCENDING' or pii == 'None'): 
                     sys.exit('Error: pass should be Ascending or Descending.')
 
         if not (isinstance(Track_user, int) or isinstance(Pass_user, list)): 
@@ -222,8 +222,8 @@ class S1ROIparameter:
                                     Pass_user = [Pass_user]
 
                                 for (tracki, passi) in zip(Track_user, Pass_user):
-                                    if (tracki == relative_orbit_number or tracki == 'None') and (passi.upper() == orbit_pass or passi == 'None'):
 
+                                    if (tracki == relative_orbit_number or str(tracki) == 'None') and (passi.upper() == orbit_pass or passi == 'None'):
                                         if not "%s_%04d" % (orbit_pass,relative_orbit_number) in self.Data:
                                             self.Data["%s_%04d" % (orbit_pass,relative_orbit_number)] = {'IW1': [], 
                                                                                                             'IW2': [],

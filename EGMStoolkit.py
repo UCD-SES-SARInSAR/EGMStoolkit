@@ -248,7 +248,7 @@ if options.example == False:
         warnings.warn('The multiple bbox parameters are not compabitible to the clipping mode. The clipping/cropping option will be fix to False. We recommend merging your ROIs inside the same shapefile.')
 
     if options.verbose: 
-        print('\n\tDetection of bbox parameters:')
+        print('\tDetection of bbox parameters:')
         h = 1
         for i1 in list_bbox: 
             print('\t\t(%d): %s' % (h,i1))
@@ -278,14 +278,14 @@ if options.example == False:
                 ROIpara.egmslevel = 'L3'
                 ROIpara.egmsL3component = 'EW'
             else:
-                ROIpara.egmslevel = 'L2b'
+                ROIpara.egmslevel = leveli
 
-            if check_dectection == False and ROIpara.egmslevel != 'L3': 
+            if check_dectection == False or ROIpara.egmslevel != 'L3': 
                 tracklist = options.track.split(',')
                 passlist = options.passS1.split(',')
-                
+               
                 if not check_dectection:
-                    if 'None' in tracklist  or 'None' in passlist:
+                    if 'None' in tracklist  and 'None' in passlist:
                         ROIpara.detectfromIDmap(infoburstID=info)
                         check_dectection = True
                     else:
