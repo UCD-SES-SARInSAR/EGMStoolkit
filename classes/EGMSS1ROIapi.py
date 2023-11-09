@@ -220,9 +220,11 @@ class S1ROIparameter:
                                 if not (isinstance(Track_user, list) or isinstance(Pass_user, list)):
                                     Track_user = [Track_user]
                                     Pass_user = [Pass_user]
+                                
+                                if len(Pass_user) == 1 and len(Track_user) != 1:
+                                    Pass_user = np.tile(Pass_user[0],[1,len(Track_user)])[0]
 
                                 for (tracki, passi) in zip(Track_user, Pass_user):
-
                                     if (tracki == relative_orbit_number or str(tracki) == 'None') and (passi.upper() == orbit_pass or passi == 'None'):
                                         if not "%s_%04d" % (orbit_pass,relative_orbit_number) in self.Data:
                                             self.Data["%s_%04d" % (orbit_pass,relative_orbit_number)] = {'IW1': [], 
