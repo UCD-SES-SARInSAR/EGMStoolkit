@@ -116,8 +116,8 @@ class S1ROIparameter:
 
         elif os.path.isfile(self.bbox):
             if self.verbose:
-                print('\tUse the vector file giving by the user')
-            gdal.VectorTranslate('self.bbox','bbox.GMT',options='-f "ESRI Shapefile" -t_srs "EPSG:4326"')
+                print('\tUse the vector file giving by the user: %s' % (self.bbox))
+            gdal.VectorTranslate('bbox.shp',self.bbox,options='-f "ESRI Shapefile" -t_srs "EPSG:4326"')
         
         elif isinstance(self.bbox, str): # ERROR
             if self.verbose:

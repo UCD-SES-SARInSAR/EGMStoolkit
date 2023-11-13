@@ -15,7 +15,7 @@ import time
 
 from functions import egmsapitools
 
-timeerror462 = 5
+timeerror462 = 15
 
 ################################################################################
 ## Creation of a class to manage the Sentinel-1 burst ID map
@@ -187,10 +187,11 @@ class egmsdownloader:
                             filename = wget.download('%s?id=%s' % (datatmplink[idx],self.token), out=pathdir)
                             if self.verbose:
                                 print(f"\tFile downloaded: {filename}")
-                        except Exception as e:
                             time.sleep(timeerror462)
+                        except Exception as e:
                             if self.verbose:
-                                print(f"An error occurred: {e}")
+                                print(f"An error occurred: {e}")                                    
+                            time.sleep(timeerror462)
                     else: 
                         if self.verbose:
                             print('\tAlready downloaded')
