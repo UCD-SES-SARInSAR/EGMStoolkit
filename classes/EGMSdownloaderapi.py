@@ -241,7 +241,7 @@ class egmsdownloader:
                 with zipfile.ZipFile("%s" %(fi), 'r') as zip_ref:
                     zip_ref.extractall('%s/%s' % (pathdirfile,namefile))
 
-                if os.path.isdir('%s/%s' % (pathdirfile,namefile)) and (not cleanmode): 
+                if os.path.isdir('%s/%s' % (pathdirfile,namefile)) and (cleanmode): 
                     os.remove(fi)
         else: 
             if self.verbose:

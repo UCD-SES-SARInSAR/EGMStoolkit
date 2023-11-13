@@ -18,6 +18,7 @@ import warnings
 import pickle
 import pyproj
 import plotly.graph_objects as go
+from numpy.matlib import repmat
 
 from functions import esa2egmsburstID
 
@@ -222,10 +223,14 @@ class S1ROIparameter:
                                 if not isinstance(Pass_user, list):
                                     Pass_user = [Pass_user]
 
-                                print(Track_user,Pass_user)
+                                if (isinstance(Track_user,list) and isinstance(Pass_user,list) and len(Pass_user)==1):
+                                    Pass_usertmp = np.tile(Pass_user[0], [len(Track_user),1])
+                                    Pass_user = []
+                                    for i1 in Pass_usertmp:
+                                        Pass_user.append(i1[0])
 
                                 for (tracki, passi) in zip(Track_user, Pass_user):
-
+                                    
                                     if (tracki == relative_orbit_number or str(tracki) == 'None') and (passi.upper() == orbit_pass or passi == 'None'):
                                         if not "%s_%04d" % (orbit_pass,relative_orbit_number) in self.Data:
                                             self.Data["%s_%04d" % (orbit_pass,relative_orbit_number)] = {'IW1': [], 
