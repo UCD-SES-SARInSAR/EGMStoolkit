@@ -217,14 +217,15 @@ class S1ROIparameter:
 
                                 egms_burst_id = esa2egmsburstID.get_egms_burst_cycle_id(relative_orbit_number, anx_mid)[-1]
                                 
-                                if not (isinstance(Track_user, list) or isinstance(Pass_user, list)):
+                                if not (isinstance(Track_user, list)):
                                     Track_user = [Track_user]
+                                if not isinstance(Pass_user, list):
                                     Pass_user = [Pass_user]
-                                
-                                if len(Pass_user) == 1 and len(Track_user) != 1:
-                                    Pass_user = np.tile(Pass_user[0],[1,len(Track_user)])[0]
+
+                                print(Track_user,Pass_user)
 
                                 for (tracki, passi) in zip(Track_user, Pass_user):
+
                                     if (tracki == relative_orbit_number or str(tracki) == 'None') and (passi.upper() == orbit_pass or passi == 'None'):
                                         if not "%s_%04d" % (orbit_pass,relative_orbit_number) in self.Data:
                                             self.Data["%s_%04d" % (orbit_pass,relative_orbit_number)] = {'IW1': [], 
