@@ -157,6 +157,11 @@ class egmsdownloader:
         else: 
             cleanmode = kwargs['clean']
 
+        if not "force" in kwargs:
+            force = False
+        else: 
+            force = kwargs['clean']
+
         if not os.path.isdir(outputdir): 
             os.mkdir(outputdir)
 
@@ -182,19 +187,23 @@ class egmsdownloader:
                     pathdir = '%s/%s/%s' % (outputdir,type,release_para[0])
 
                     if not os.path.isfile('%s/%s' % (pathdir,datatmp[idx])): 
-                        try:
-                            # Download the file
-                            filename = wget.download('%s?id=%s' % (datatmplink[idx],self.token), out=pathdir)
+                        if (not ('%s/%s/%s%s' % (pathdir,datatmp[idx].split('.')[0],datatmp[idx].split('.')[0],'.csv'))) and force == True:
+                            try:
+                                # Download the file
+                                filename = wget.download('%s?id=%s' % (datatmplink[idx],self.token), out=pathdir)
+                                if self.verbose:
+                                    print(f"\tFile downloaded: {filename}")
+                                time.sleep(timeerror462)
+                            except Exception as e:
+                                if self.verbose:
+                                    print(f"An error occurred: {e}")                                    
+                                time.sleep(timeerror462)
+                        else:
                             if self.verbose:
-                                print(f"\tFile downloaded: {filename}")
-                            time.sleep(timeerror462)
-                        except Exception as e:
-                            if self.verbose:
-                                print(f"An error occurred: {e}")                                    
-                            time.sleep(timeerror462)
+                                print('\tAlready downloaded (detection of the .csv file)')
                     else: 
                         if self.verbose:
-                            print('\tAlready downloaded')
+                            print('\tAlready downloaded (detection of the .zip file)')
 
                     h = h + 1
 

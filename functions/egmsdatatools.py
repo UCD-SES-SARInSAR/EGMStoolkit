@@ -231,7 +231,7 @@ def datamergingtiff(**kwargs):
                     listfiles.append('%s/%s/%s/%s' % (inputdir,type,release_para[0],datatmp[idx].split('.')[0]))
     else: # Based on the files
         listfiles = glob.glob('%s/*/*/*/*.tiff' % (inputdir))
-
+    
     if not listfiles:
         sys.exit('Error: no files are detected.')
 
@@ -451,7 +451,7 @@ def filemergingcsv(inputdir,outputdir,name,listfile,paratosave):
     first_one = True
     date_ts = []
     for fi in listfile:
-        
+
         # Detection of the file 
         pathfi = glob.glob('%s/*/*/*/%s.csv' % (inputdir,fi))[0]
         head = pd.read_csv(pathfi, index_col=0, nrows=0).columns.tolist()
@@ -494,8 +494,12 @@ def filemergingcsv(inputdir,outputdir,name,listfile,paratosave):
             for hi in mand_para:
                 datamatrix[hi] = []
             # Selected parameters
-            for hi in paratosave.split(','):
-                datamatrix[hi] = []
+            if isinstance(paratosave,list):
+                for hi in paratosave:
+                    datamatrix[hi] = []
+            else:
+                for hi in paratosave.split(','):
+                    datamatrix[hi] = []
 
         # Merging 
         list_save = list(datamatrix.keys())
