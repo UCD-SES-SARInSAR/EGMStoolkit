@@ -31,6 +31,9 @@ def datagridding(**kwargs):
     else: 
         outputdir = kwargs['outputdir']
 
+    if not os.path.isdir(outputdir):
+        os.mkdir(outputdir)
+
     if not "inputdir" in kwargs:
         inputdir = './Output'
     else: 
@@ -76,7 +79,7 @@ def datagridding(**kwargs):
 
     ## Create the list of files
     if namefile == 'all':
-        list_filetmp = glob.glob('%s/*.csv' %(outputdir))
+        list_filetmp = glob.glob('%s/*.csv' %(inputdir))
 
         list_noclip = []
         list_clip = []
@@ -137,7 +140,7 @@ def datagridding(**kwargs):
             print('\t\tInterpolation for the variable: %s' % (parai)) 
 
             if not os.path.isfile('%s/%s_%s.tif' % (outputdir,namefile,parai)):
-                cmdi = 'gdal_grid -zfield "%s" -a_srs EPSG:3035 -a %s -txe %f %f -tye %f %f -tr %f %f -of GTiff -l %s -ot Float64 %s/%s.vrt %s/%s_%s.tif' % (parai,paragrid['algo'],paragrid['Xmin'],paragrid['Xmax'],paragrid['Ymin'],paragrid['Ymax'],paragrid['xres'],paragrid['yres'],namefile,inputdir,namefile,outputdir,namefile,parai)
+                cmdi = 'gdal_grid -zfield "%s" -a_srs EPSG:3035 -a %s -txe %f %f -tye %f %f -tr %f %f -of GTiff -l %s -ot Float64 %s/%s.vrt %s/%s_%s.tif' % (parai,paragrid['algo'],paragrid['Xmin'],paragrid['Xmax'],paragrid['Ymin'],paragrid['Ymax'],paragrid['xres'],paragrid['yres'],namefile,outputdir,namefile,outputdir,namefile,parai)
 
                 print('\t\tThe command will be: %s' % (cmdi))
                 os.system(cmdi)
