@@ -481,9 +481,29 @@ else:
     "# Delete the raw-data directorie\n",
     "egmsdatatools.removerawdata(inputdir='./Output',verbose=True)\n",
     "    # inputdir: inputdir directory [./Output]\n",
-    "    # verbose [True or False]))")
-
-    # Interpolation of the data (for later)
+    "    # verbose [True or False])\n",
+    "\n",
+    "###########################################################################\n",
+    "# (5) Post-process of the file for ADVANCED USERS\n",
+    "\n",
+    "# Interpolation of point data into a .tif raster file (can be done before the cropping/clipping step)\n",
+    "# Creation of the dict. for the gridding parameters\n",
+    "paragrid = dict()\n",
+    "paragrid['Xmin'] = 2896000 # Minimal X coordinate in EPGS:3035\n",
+    "paragrid['Ymin'] = 3317250 # Minimal Y coordinate in EPGS:3035\n",
+    "paragrid['Xmax'] = 3359000 # Maximal X coordinate in EPGS:3035\n",
+    "paragrid['Ymax'] = 3745500 # Maximal Y coordinate in EPGS:3035\n",
+    "paragrid['xres'] = 500 # X spatial resolution in EPGS:3035\n",
+    "paragrid['yres'] = 500 # Y spatial resolution in EPGS:3035\n",
+    "paragrid['algo'] = 'average:radius1=500:radius2=500:angle=0.0:nodata=-9999' # Alfgorithm used and options\n",
+    "paragrid['variable'] = 'mean_velocity,mean_velocity_std,acceleration,acceleration_std,seasonality,seasonality_std'\n",
+    "# paragrid['algo'] = 'invdist:power=2.0:smoothing=0.0:radius1=0.0:radius2=0.0:angle=0.0:max_points=0:min_points=0:nodata=0.0'\n",
+    "# paragrid['algo'] = 'invdistnn:power=2.0:radius=1.0:max_points=12:min_points=0:nodata=0'\n",
+    "# paragrid['algo'] = 'average:radius1=0.0:radius2=0.0:angle=0.0:min_points=0:nodata=0.0'\n",
+    "# paragrid['algo'] = 'nearest:radius1=0.0:radius2=0.0:angle=0.0:nodata=0.0'\n",
+    "# paragrid['algo'] = 'linear:radius=-1.0:nodata=0.0'\n",
+    "\n",
+    "egmsdatatools.datagridding(inputdir='./Output',outputdir='./Output',file='all',verbose=True,paragrid=paragrid)")
 
     # Conversion of the data (for later)
 

@@ -232,6 +232,28 @@ egmsdatatools.dataclipping(inputdir='./Output',outputdir='./Output',file='all',s
 egmsdatatools.removerawdata(inputdir='./Output',verbose=True)
     # inputdir: inputdir directory [./Output]
     # verbose [True or False]))
+
+###########################################################################
+# (5) Post-process of the file for ADVANCED USERS
+
+# Interpolation of point data into a .tif raster file (can be done before the cropping/clipping step)
+# Creation of the dict. for the gridding parameters
+paragrid = dict()
+paragrid['Xmin'] = 2896000 # Minimal X coordinate in EPGS:3035
+paragrid['Ymin'] = 3317250 # Minimal Y coordinate in EPGS:3035
+paragrid['Xmax'] = 3359000 # Maximal X coordinate in EPGS:3035
+paragrid['Ymax'] = 3745500 # Maximal Y coordinate in EPGS:3035
+paragrid['xres'] = 500 # X spatial resolution in EPGS:3035
+paragrid['yres'] = 500 # Y spatial resolution in EPGS:3035
+paragrid['algo'] = 'average:radius1=500:radius2=500:angle=0.0:nodata=-9999' # Alfgorithm used and options
+paragrid['variable'] = 'mean_velocity,mean_velocity_std,acceleration,acceleration_std,seasonality,seasonality_std'
+# paragrid['algo'] = 'invdist:power=2.0:smoothing=0.0:radius1=0.0:radius2=0.0:angle=0.0:max_points=0:min_points=0:nodata=0.0'
+# paragrid['algo'] = 'invdistnn:power=2.0:radius=1.0:max_points=12:min_points=0:nodata=0'
+# paragrid['algo'] = 'average:radius1=0.0:radius2=0.0:angle=0.0:min_points=0:nodata=0.0'
+# paragrid['algo'] = 'nearest:radius1=0.0:radius2=0.0:angle=0.0:nodata=0.0'
+# paragrid['algo'] = 'linear:radius=-1.0:nodata=0.0'
+
+egmsdatatools.datagridding(inputdir='./Output',outputdir='./Output',file='all',verbose=True,paragrid=paragrid)
 ````
 
 ## 3 Developer & Contact

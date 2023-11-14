@@ -22,6 +22,134 @@ latlon_to_meter = pyproj.Transformer.from_crs(source_crs, target_crs)
 meter_to_latlon = pyproj.Transformer.from_crs(target_crs,source_crs)
 
 ################################################################################
+## Function to interpolate the data into a raster
+################################################################################
+def datagridding(**kwargs): 
+    
+    if not "outputdir" in kwargs:
+        outputdir = './Output'
+    else: 
+        outputdir = kwargs['outputdir']
+
+    if not "inputdir" in kwargs:
+        inputdir = './Output'
+    else: 
+        inputdir = kwargs['inputdir']
+
+    if not "file" in kwargs:
+        namefile = 'all'
+    else: 
+        namefile = kwargs['file']
+
+    if not "verbose" in kwargs:
+        verbose = True
+    else: 
+        verbose = kwargs['verbose']
+
+    if "paragrid" in kwargs:
+        paragrid = kwargs['paragrid']
+    else: 
+        sys.exit('Error: the paragrid parameter is mandatory.')
+
+    if paragrid['Xmin'] <= 0 or paragrid['Ymin'] <= 0 or paragrid['Xmin'] <= 0 or paragrid['Ymax'] <= 0 or paragrid['xres'] <= 0 or paragrid['yres'] <= 0: 
+        sys.exit('Error: the paragrid parameter is not correct.')
+
+    if (not 'invdist' in paragrid['algo']) and (not 'invdistnn' in paragrid['algo']) and (not 'average' in paragrid['algo']) and (not 'nearest' in paragrid['algo'])  and (not 'linear' in paragrid['algo']):
+        sys.exit('Error: the paragrid parameter is not correct.')
+
+    if verbose:
+        print('EMGStoolkit.py => egmsdatatools: grid the files')
+        if not namefile == 'all':
+            print('\tThe file name is: %s' % (namefile))
+        else:
+            print('\tInput Directory: %s' % (inputdir))
+            print('\tOutput Directory: %s' % (outputdir))
+
+        print('\tParameters for interpolation')
+        print('\t\t X min. (in EPGS:3035): %f' %(paragrid['Xmin']))
+        print('\t\t Y min. (in EPGS:3035): %f' %(paragrid['Ymin']))
+        print('\t\t X max. (in EPGS:3035): %f' %(paragrid['Xmax']))
+        print('\t\t Y max. (in EPGS:3035): %f' %(paragrid['Ymax']))
+        print('\t\t X resolution (in EPGS:3035): %f' %(paragrid['xres']))
+        print('\t\t Y resolution (in EPGS:3035): %f' %(paragrid['yres']))
+        print('\t\t Algorithm options: %s' %(paragrid['algo']))
+
+    ## Create the list of files
+    if namefile == 'all':
+        list_filetmp = glob.glob('%s/*.csv' %(outputdir))
+
+        list_noclip = []
+        list_clip = []
+        for li in list_filetmp:
+            if 'clipped' in li:
+                list_clip.append(li)
+            else:
+                list_noclip.append(li)
+        
+        if list_clip:
+            list_file_final = list_clip
+        else:
+            list_file_final = list_noclip
+
+    else:
+        tmp = namefile.split(',')
+        if not '/' in namefile:
+            list_file_final = []
+            for ni in tmp:
+                list_file_final.append(inputdir+'/'+ni)
+        else:
+            list_file_final = [namefile]
+
+    if not list_file_final:
+        sys.exit('Error: the list of files is empty.')
+
+    if verbose:
+        print('\tList of files processed:') 
+        for li in list_file_final:
+            print('\t\t%s' %(li)) 
+
+    if verbose:
+        print('\tList of parameters interpolated:') 
+        for li in paragrid['variable'].split(','):
+            print('\t\t%s' %(li)) 
+
+    # Interpolation
+    it = 1
+    for fi in list_file_final:
+        if verbose:
+            print('\t%d / %d Processing of the file: %s:' %(it,len(list_file_final),fi)) 
+
+        if verbose:
+            print('\t\tWrite the .vrt') 
+
+        namefile = fi[0:-4].split('/')[-1]
+        
+        with open('%s/%s.vrt' %(outputdir,namefile),'w') as fout:
+            fout.write('<OGRVRTDataSource>\n')
+            fout.write('\t<OGRVRTLayer name="%s">\n' % (namefile))
+            fout.write('\t\t<SrcDataSource>%s/%s.csv</SrcDataSource>\n'% (inputdir,namefile))
+            fout.write('\t\t<GeometryType>wkbPoint</GeometryType>\n')
+            fout.write('\t\t<GeometryField encoding="PointFromColumns" x="easting" y="northing"/>\n')
+            fout.write('\t\t</OGRVRTLayer>\n')
+            fout.write('</OGRVRTDataSource>\n')
+
+        for parai in paragrid['variable'].split(','):
+            print('\t\tInterpolation for the variable: %s' % (parai)) 
+
+            if not os.path.isfile('%s/%s_%s.tif' % (outputdir,namefile,parai)):
+                cmdi = 'gdal_grid -zfield "%s" -a_srs EPSG:3035 -a %s -txe %f %f -tye %f %f -tr %f %f -of GTiff -l %s -ot Float64 %s/%s.vrt %s/%s_%s.tif' % (parai,paragrid['algo'],paragrid['Xmin'],paragrid['Xmax'],paragrid['Ymin'],paragrid['Ymax'],paragrid['xres'],paragrid['yres'],namefile,inputdir,namefile,outputdir,namefile,parai)
+
+                print('\t\tThe command will be: %s' % (cmdi))
+                os.system(cmdi)
+            else:
+                print('\t\tThe .tif file has been detected. Please delete it for a new interpolation.')
+
+        if os.path.isfile('%s/%s.vrt' %(outputdir,namefile)):
+            os.remove('%s/%s.vrt' %(outputdir,namefile))
+
+        it = it + 1
+
+################################################################################
 ## Function to merge the datasets in csv format
 ################################################################################
 def removerawdata(**kwargs): 
