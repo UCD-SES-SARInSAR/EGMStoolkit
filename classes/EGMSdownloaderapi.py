@@ -158,7 +158,7 @@ class egmsdownloader:
             cleanmode = kwargs['clean']
 
         if not "force" in kwargs:
-            force = False
+            force = True
         else: 
             force = kwargs['clean']
 
@@ -187,7 +187,7 @@ class egmsdownloader:
                     pathdir = '%s/%s/%s' % (outputdir,type,release_para[0])
 
                     if not os.path.isfile('%s/%s' % (pathdir,datatmp[idx])): 
-                        if (not ('%s/%s/%s%s' % (pathdir,datatmp[idx].split('.')[0],datatmp[idx].split('.')[0],'.csv'))) and force == True:
+                        if (not ('%s/%s/%s%s' % (pathdir,datatmp[idx].split('.')[0],datatmp[idx].split('.')[0],'.csv'))) or force == True:
                             try:
                                 # Download the file
                                 filename = wget.download('%s?id=%s' % (datatmplink[idx],self.token), out=pathdir)
